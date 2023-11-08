@@ -1,0 +1,12 @@
+[submodule "chat-service"]
+	path = chat-service
+	url = https://github.com/GARROWD/chat-service.git
+[submodule "news-service"]
+	path = news-service
+	url = https://github.com/GARROWD/news-service.git
+[submodule "admission-service"]
+	path = admission-service
+	url = https://github.com/GARROWD/admission-service.git
+[submodule "schedule-attendance-service"]
+	path = schedule-attendance-service
+	url = https://github.com/GARROWD/schedule-attendance-service.git
