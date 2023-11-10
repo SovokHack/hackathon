@@ -8,17 +8,33 @@
    - Описание: Сервис, отвечающий за процессы связанные с заявками.
    - Директория: `/admission-service`
 
-2. **Chat Service**
+2. **Auth Server**
+   - Описание: Сервер авторизации.
+   - Директория: `/authserver`
+
+3. **Chat Service**
    - Описание: Сервис для обеспечения функциональности чата.
    - Директория: `/chat-service`
 
-3. **News Service**
+4. **Courses Service**
+   - Описание: Сервис для управления курсами и образовательным контентом.
+   - Директория: `/coursesservice`
+
+5. **News Service**
    - Описание: Сервис для управления новостями.
    - Директория: `/news-service`
 
-4. **Schedule Attendance Service**
+6. **Schedule Attendance Service**
    - Описание: Сервис, отвечающий за расписание и отметку посещаемости.
    - Директория: `/schedule-attendance-service`
+
+7. **Storage Service**
+   - Описание: Сервис для хранения файлов.
+   - Директория: `/storageservice`
+
+8. **User Service**
+   - Описание: Сервис, управляющий данными пользователей.
+   - Директория: `/userservice`
 
 ## Запуск проекта
 
@@ -29,3 +45,4 @@
 - [Слава Иванков] - Backend / DevOps
 - [Мкртчян Гарик] - Backend / Content Manager
 - [Артем Зеньков] - Frontend
+
