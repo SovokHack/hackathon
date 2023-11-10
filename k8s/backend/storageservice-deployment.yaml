@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sovcom-api
+  name: storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storage
+  template:
+    metadata:
+      labels:
+        app: storage
+    spec:
+      containers:
+        - env:
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: storage-port
+            - name: ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: issuer-url
+            - name: MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: mongo-url
+            - name: SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: storage-server-url
+          image: is1di/storageservice:1.0.1
+          name: storage
+          ports:
+            - containerPort: 8084
+              hostPort: 8084
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sovcom-api
+  name: storage-service
+spec:
+  ports:
+    - name: http
+      port: 8084
+      targetPort: 8084
+  selector:
+    app: storage

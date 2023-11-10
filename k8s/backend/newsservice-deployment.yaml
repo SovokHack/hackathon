@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sovcom-api
+  name: news
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: news
+  template:
+    metadata:
+      labels:
+        app: news
+    spec:
+      containers:
+        - env:
+            - name: ALLOWED_ORIGIN
+              value: http://localhost:8080
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: pg-pass
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: pg-user
+            - name: ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: issuer-url
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: news-port
+            - name: POSTGRESDB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: pg-news
+          image: garrowd/newsservice:1.0.0
+          name: news
+          ports:
+            - containerPort: 8078
+              hostPort: 8078
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sovcom-api
+  name: news-service
+spec:
+  ports:
+    - name: http
+      port: 8078
+      targetPort: 8078
+  selector:
+    app: news

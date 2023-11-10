@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admission
+  namespace: sovcom-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admission
+  template:
+    metadata:
+      labels:
+        app: admission
+    spec:
+      containers:
+        - env:
+            - name: ALLOWED_ORIGIN
+              value: http://localhost:8080
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: pg-pass
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: pg-user
+            - name: GRPC_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: admission-grpc-port
+            - name: ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: issuer-url
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: admission-port
+            - name: POSTGRESDB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: pg-admission
+          image: garrowd/admissionservice:1.0.0
+          name: admission
+          ports:
+            - name: grpc
+              containerPort: 7077
+              hostPort: 7077
+            - name: http
+              containerPort: 8077
+              hostPort: 8077
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sovcom-api
+  name: admission-service
+spec:
+  ports:
+    - name: grpc
+      port: 7077
+      targetPort: 7077
+    - name: http
+      port: 8077
+      targetPort: 8077
+  selector:
+    app: admission

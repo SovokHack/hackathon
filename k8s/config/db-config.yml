@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    namespace: sovcom-api
+    name: db-configs
+data:
+    pg-url: "monorail.proxy.rlwy.net:58816"
+    pg-user: "postgres"
+    pg-pass: "6Ed*aFfefda43aEa3CCa42F6E5bgFAa*"
+
+    pg-admission: "viaduct.proxy.rlwy.net:39883/admission"
+    pg-chat: "viaduct.proxy.rlwy.net:39883/chat"
+    pg-news: "viaduct.proxy.rlwy.net:39883/news"
+    pg-schedule: "viaduct.proxy.rlwy.net:39883/scheduleattendance"
+
+    mongo-url: "mongodb://mongo:1H55hCfeabFB5eFGDFf-gDdF24DEEaaG@viaduct.proxy.rlwy.net:23566"

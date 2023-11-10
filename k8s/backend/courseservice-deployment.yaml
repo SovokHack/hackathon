@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sovcom-api
+  name: course
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: course
+  template:
+    metadata:
+      labels:
+        app: course
+    spec:
+      containers:
+        - env:
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: course-port
+            - name: GRPC_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: course-grpc-port
+            - name: ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: issuer-url
+            - name: MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: mongo-url
+          image: is1di/courseservice:1.0.5
+          name: course
+          ports:
+            - name: grpc
+              hostPort: 7090
+              containerPort: 7090
+            - name: http
+              containerPort: 8090
+              hostPort: 8090
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sovcom-api
+  name: course-service
+spec:
+  ports:
+    - name: grpc
+      port: 7090
+      targetPort: 7090
+    - name: http
+      port: 8090
+      targetPort: 8090
+  selector:
+    app: course

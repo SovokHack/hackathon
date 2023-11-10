@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sovcom-api
+  name: auth-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-server
+  template:
+    metadata:
+      labels:
+        app: auth-server
+    spec:
+      containers:
+        - env:
+            - name: FRONT_REDIRECT_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: auth-redirect-uri
+            - name: ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: issuer-url
+            - name: MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: mongo-url
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: auth-port
+          image: is1di/authserver:1.0.9
+          name: auth-server
+          ports:
+            - containerPort: 9000
+              hostPort: 9000
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sovcom-api
+  name: auth-server-service
+spec:
+  ports:
+    - name: http
+      port: 9000
+      targetPort: 9000
+  selector:
+    app: auth-server

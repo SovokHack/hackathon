@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sovcom-api
+  name: users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+      containers:
+        - env:
+            - name: ACADEMIC_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: academic-grpc-addr
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: users-port
+            - name: GRPC_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: users-grpc-port
+            - name: COURSE_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: course-grpc-addr
+            - name: ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-conf
+                  key: issuer-url
+            - name: MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: db-configs
+                  key: mongo-url
+          image: is1di/userservice:1.1.8
+          name: users
+          ports:
+            - name: grpc
+              containerPort: 7082
+              hostPort: 7082
+            - name: http
+              containerPort: 8082
+              hostPort: 8082
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sovcom-api
+  name: user-service
+spec:
+  ports:
+    - name: grpc
+      port: 7082
+      targetPort: 7082
+    - name: http
+      port: 8082
+      targetPort: 8082
+  selector:
+    app: users
+
