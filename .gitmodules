@@ -10,3 +10,15 @@
 [submodule "schedule-attendance-service"]
 	path = schedule-attendance-service
 	url = https://github.com/GARROWD/schedule-attendance-service.git
+[submodule "storage-service"]
+	path = storage-service
+	url = https://github.com/IS1DI/storage-service.git
+[submodule "user-service"]
+	path = user-service
+	url = https://github.com/IS1DI/user-service.git
+[submodule "auth-server"]
+	path = auth-server
+	url = https://github.com/IS1DI/auth-server.git
+[submodule "course-service"]
+	path = course-service
+	url = https://github.com/IS1DI/course-service.git
